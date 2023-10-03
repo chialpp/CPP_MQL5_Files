@@ -12,10 +12,11 @@
 
 
 
-input int GridDistancePoint=400;
+int GridDistancePoint=300;
 double high_grid;
 double low_grid;
 double balance_grid;
+double LotSize=1;
 //+------------------------------------------------------------------+
 //| Expert initialization function                                   |
 //+------------------------------------------------------------------+
@@ -24,7 +25,8 @@ int OnInit()
 
       double ask=SymbolInfoDouble(_Symbol,SYMBOL_ASK);
       double bid=SymbolInfoDouble(_Symbol,SYMBOL_BID);
-      Trading.Buy(1,_Symbol,ask);
+      
+            
       
       balance_grid=ask;
       high_grid=next_higer_grid(balance_grid,GridDistancePoint);       
@@ -46,23 +48,26 @@ void OnDeinit(const int reason)
 //+------------------------------------------------------------------+
 void OnTick()
   {   
+      
+      Comment("The total position is: "+PositionsTotal());
       MqlDateTime  TimeStructure;   
       datetime timee=TimeCurrent();
       TimeToStruct(timee,TimeStructure);
 
       double ask=SymbolInfoDouble(_Symbol,SYMBOL_ASK);
       double bid=SymbolInfoDouble(_Symbol,SYMBOL_BID);
-         
+      
+      if (PositionsTotal()==0)Trading.Buy(LotSize,_Symbol);
       // if (TimeStructure.day_of_week == 5 && PositionsTotal()!=0) {close_All_Orders();}   
          
-      if(ask>high_grid && TimeStructure.day_of_week != 5)
+      if(ask>high_grid)
       {
          // Close one Buy
-         //close_oldest_buy(_Symbol);
+         close_oldest_buy(_Symbol);
          
          // Open a buy and Sell
-         //Trading.Buy(1,_Symbol);
-         Trading.Sell(1,_Symbol);
+         Trading.Buy(LotSize,_Symbol);
+         Trading.Sell(LotSize,_Symbol);
          
          balance_grid=ask;
          high_grid=next_higer_grid(balance_grid,GridDistancePoint);       
@@ -73,16 +78,16 @@ void OnTick()
       
       
       
-      if(bid<low_grid && TimeStructure.day_of_week != 5)
+      if(bid<low_grid)
       {
          // Close one Sell
-         //close_oldest_Sell(_Symbol);
+         close_oldest_Sell(_Symbol);
          
          // Open a buy and Sell
-         Trading.Buy(1,_Symbol);
-         //Trading.Sell(1,_Symbol);
+         Trading.Buy(LotSize,_Symbol);
+         Trading.Sell(LotSize,_Symbol);
          
-         balance_grid=bid;
+         balance_grid=ask;
          high_grid=next_higer_grid(balance_grid,GridDistancePoint);       
          low_grid=next_lower_grid(balance_grid,GridDistancePoint);
          
