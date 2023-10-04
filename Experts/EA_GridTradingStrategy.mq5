@@ -129,7 +129,7 @@ void close_oldest_buy(string Symboll)
    {
       PositionSelectByTicket(PositionGetTicket(i));
 
-      if(PositionGetString(POSITION_SYMBOL)==Symboll && PositionGetInteger(POSITION_TYPE)==0) 
+      if(PositionGetString(POSITION_SYMBOL)==Symboll && PositionGetInteger(POSITION_TYPE)==0 && PositionGetDouble(POSITION_PROFIT)>0) 
       {
       //Positionn.SelectByIndex(i);
       do
@@ -152,7 +152,7 @@ void close_oldest_Sell(string Symboll)
    {
       PositionSelectByTicket(PositionGetTicket(i));
 
-      if(PositionGetString(POSITION_SYMBOL)==Symboll && PositionGetInteger(POSITION_TYPE)==1) 
+      if(PositionGetString(POSITION_SYMBOL)==Symboll && PositionGetInteger(POSITION_TYPE)==1 && PositionGetDouble(POSITION_PROFIT)>0) 
       {
       //Positionn.SelectByIndex(i);
       do
